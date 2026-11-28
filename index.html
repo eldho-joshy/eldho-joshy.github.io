@@ -585,6 +585,12 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10
       stack: ["Python", "Pandas", "SciPy", "Google Earth Engine", "Bootstrap statistics", "SVG", "GitHub Pages"],
       pipe: ["Audited the data first: dropped a flood-damage question the data could not support, and replaced an incomplete CHIRPS mirror with Earth Engine.", "Built district-level daily series for each product and found a day-boundary offset between IMD and CHIRPS before comparing.", "Rank-correlated yearly maximum rainfall between product pairs with bootstrap intervals, and fixed the agree / partial / none tiers in advance.", "Tested that different district outlines do not explain the result, then published an interactive map and result tables."],
       out: "Seasonal totals agree in all 14 districts, but yearly 7-day extremes agree in only 4; the Western Ghats districts are weakest. Agreement means consistent with each other, not accurate.", links: [["Interactive map", "https://eldho-joshy.github.io/kerala-rainfall-extremes/"], ["Repo", GH + "kerala-rainfall-extremes"]] },
+    { id: "income", t: "Income Classification: UCI Adult", sub: "What does a model add over a baseline?", cat: "ml", metric: "85.8% accuracy vs 76.1% baseline",
+      prob: "Accuracy is misleading when 76% of people fall in one class, so how much does a model really add, and which model is worth using?",
+      sum: "Classifies whether income exceeds $50K on the UCI Adult dataset (48,842 rows), comparing a majority baseline, logistic regression and random forests.",
+      stack: ["Python", "Pandas", "Scikit-learn", "Matplotlib"],
+      pipe: ["Held out a stratified test set and compared every model against an always-guess-majority baseline.", "Reported precision, recall, F1 and ROC-AUC for the minority class instead of accuracy alone.", "Handled class imbalance with class weights and a decision threshold chosen on training data only.", "Explained the model with permutation importance and documented the limits, including 1994 data and no fairness audit."],
+      out: "The forest reaches 85.8% accuracy against a 76.1% baseline, but a plain logistic regression matches its ROC-AUC (0.906). Class weighting trades precision for recall rather than improving ranking.", links: [["Repo", GH + "Salary-Prediction-using-Machine-Learning"]] },
     { id: "churn", t: "Telco Customer Churn Prediction", sub: "Binary classification and three-tier risk segmentation", cat: "ml", metric: "84% ROC-AUC · 80% recall",
       prob: "Subscription businesses lose recurring revenue when high-risk customers cancel before retention teams can step in.",
       sum: "Predicts which telecom customers are likely to leave, using Logistic Regression and Random Forest, with class-imbalance handling and a three-tier risk framework.",
@@ -641,6 +647,12 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10
   var T = function (x, y, s, a) { return '<text x="' + x + '" y="' + y + '"' + (a ? ' text-anchor="' + a + '"' : "") + ' class="at">' + s + "</text>"; };
   var bars = function (x0, y0, w, gap, hs, cls) { return hs.map(function (h, i) { return '<rect class="ab ' + (cls || "") + '" style="--i:' + i + '" x="' + (x0 + i * (w + gap)) + '" y="' + (y0 - h) + '" width="' + w + '" height="' + h + '" rx="3"/>'; }).join(""); };
   var ART = {
+    income: function () {
+      var rows = [["BASELINE", 76.1, "var(--muted)", ".6"], ["LOGISTIC REG.", 85.4, "var(--blue)", ".9"], ["RANDOM FOREST", 85.8, "var(--cyan)", ".9"]];
+      return T(20, 24, "INCOME / UCI ADULT") + T(380, 24, "TEST ACCURACY", "end") +
+        rows.map(function (r, i) { var y = 54 + i * 34; return T(20, y + 11, r[0]) + '<rect x="120" y="' + y + '" width="210" height="14" rx="7" class="af"/><rect class="ah" style="--i:' + i + '" x="120" y="' + y + '" width="' + (r[1] * 2.1) + '" height="14" rx="7" fill="' + r[2] + '" opacity="' + r[3] + '"/>' + T(380, y + 11, r[1].toFixed(1) + "%", "end"); }).join("") +
+        T(20, 160, "MAJORITY CLASS ALREADY SCORES 76%");
+    },
     kerala: function () {
       var cells = "";
       for (var i = 0; i < 14; i++) {
